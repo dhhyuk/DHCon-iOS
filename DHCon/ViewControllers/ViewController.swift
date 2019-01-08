@@ -92,10 +92,12 @@ class ViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func btnSelectImageClick(_ sender: Any) {
-        guard let galleryVC = UIStoryboard(name: "Gallery", bundle: Bundle.main).instantiateInitialViewController() else {
-            return
+        let vc = GalleryViewController.Create { (galleryVC) in
+            galleryVC.completionSelect = { image in
+                self.imageView.image = image
+            }
         }
-        self.present(galleryVC, animated: true, completion: nil)
+        self.present(vc, animated: true, completion: nil)
     }
     
     

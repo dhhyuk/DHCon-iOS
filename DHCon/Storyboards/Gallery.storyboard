@@ -47,11 +47,73 @@
                     <connections>
                         <outlet property="barClose" destination="Hps-1H-bL5" id="U3G-et-7Sn"/>
                         <outlet property="cvImages" destination="e6b-fO-zQu" id="JNS-zx-kyV"/>
+                        <segue destination="yO9-1m-bX4" kind="show" id="fD8-KD-sAK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RX4-NW-1OQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="846" y="118"/>
+        </scene>
+        <!--Cropper-->
+        <scene sceneID="UA8-Ag-PE2">
+            <objects>
+                <viewController storyboardIdentifier="CropperViewController" id="yO9-1m-bX4" customClass="CropperViewController" customModule="DHCon" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fdN-no-plP">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r7U-im-69o">
+                                <rect key="frame" x="127.5" y="241.5" width="120" height="120"/>
+                                <subviews>
+                                    <scrollView multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qhM-nt-AeZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="opF-gX-xAh">
+                                                <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="120" id="OPG-lb-TN6"/>
+                                                    <constraint firstAttribute="width" constant="120" id="yRe-aI-ggC"/>
+                                                </constraints>
+                                            </imageView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="opF-gX-xAh" secondAttribute="bottom" id="BcQ-KR-zht"/>
+                                            <constraint firstItem="opF-gX-xAh" firstAttribute="leading" secondItem="qhM-nt-AeZ" secondAttribute="leading" id="IvA-ke-qi5"/>
+                                            <constraint firstItem="opF-gX-xAh" firstAttribute="top" secondItem="qhM-nt-AeZ" secondAttribute="top" id="LQG-Aw-iHz"/>
+                                            <constraint firstAttribute="trailing" secondItem="opF-gX-xAh" secondAttribute="trailing" id="q5R-0G-D9S"/>
+                                        </constraints>
+                                    </scrollView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="5S3-Ab-9yj"/>
+                                    <constraint firstAttribute="trailing" secondItem="qhM-nt-AeZ" secondAttribute="trailing" id="EJX-yZ-X1v"/>
+                                    <constraint firstItem="qhM-nt-AeZ" firstAttribute="leading" secondItem="r7U-im-69o" secondAttribute="leading" id="cae-Sw-jp4"/>
+                                    <constraint firstItem="qhM-nt-AeZ" firstAttribute="top" secondItem="r7U-im-69o" secondAttribute="top" id="dt2-GG-iiB"/>
+                                    <constraint firstAttribute="width" constant="120" id="f1G-sg-cxk"/>
+                                    <constraint firstAttribute="bottom" secondItem="qhM-nt-AeZ" secondAttribute="bottom" id="h5O-Z8-FyN"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="r7U-im-69o" firstAttribute="centerX" secondItem="fdN-no-plP" secondAttribute="centerX" id="2b9-l0-gb4"/>
+                            <constraint firstItem="r7U-im-69o" firstAttribute="centerY" secondItem="fdN-no-plP" secondAttribute="centerY" id="QcU-lz-O9v"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="L1x-df-lcG"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Cropper" largeTitleDisplayMode="never" id="4SW-AZ-uYt"/>
+                    <connections>
+                        <outlet property="imageTarget" destination="opF-gX-xAh" id="OhQ-rW-k2a"/>
+                        <outlet property="imageTargetHeight" destination="OPG-lb-TN6" id="rMK-vh-mjy"/>
+                        <outlet property="imageTargetWidth" destination="yRe-aI-ggC" id="Slc-qD-H09"/>
+                        <outlet property="viewCropContainer" destination="r7U-im-69o" id="HVd-db-VaV"/>
+                        <outlet property="viewCropScroll" destination="qhM-nt-AeZ" id="7OA-Zp-xwr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BWY-N2-vUD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1521" y="118"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="aOP-tC-zFC">
@@ -61,6 +123,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" largeTitles="YES" id="5dF-fh-ndU">
                         <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.32549019610000002" green="0.30588235289999999" blue="0.88235294119999996" alpha="1" colorSpace="deviceRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.35294117650000001" alpha="1" colorSpace="deviceRGB"/>
                         </textAttributes>

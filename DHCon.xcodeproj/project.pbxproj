@@ -21,6 +21,7 @@
 		4B39B15621E53DBC00FF8D70 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B39B15421E53DBC00FF8D70 /* PhotosUI.framework */; };
 		4B39B15921E5406300FF8D70 /* SelectImageCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B39B15721E5406300FF8D70 /* SelectImageCollectionCell.swift */; };
 		4B39B15A21E5406300FF8D70 /* SelectImageCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B39B15821E5406300FF8D70 /* SelectImageCollectionCell.xib */; };
+		4B39B15C21E5501E00FF8D70 /* CropperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B39B15B21E5501E00FF8D70 /* CropperViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		4B39B15421E53DBC00FF8D70 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 		4B39B15721E5406300FF8D70 /* SelectImageCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectImageCollectionCell.swift; sourceTree = "<group>"; };
 		4B39B15821E5406300FF8D70 /* SelectImageCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectImageCollectionCell.xib; sourceTree = "<group>"; };
+		4B39B15B21E5501E00FF8D70 /* CropperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropperViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 			children = (
 				4B39B11D21DB7BF400FF8D70 /* ViewController.swift */,
 				4B39B14D21DD70C900FF8D70 /* GalleryViewController.swift */,
+				4B39B15B21E5501E00FF8D70 /* CropperViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 				4B39B15921E5406300FF8D70 /* SelectImageCollectionCell.swift in Sources */,
 				4B39B11E21DB7BF400FF8D70 /* ViewController.swift in Sources */,
 				4B39B11C21DB7BF400FF8D70 /* AppDelegate.swift in Sources */,
+				4B39B15C21E5501E00FF8D70 /* CropperViewController.swift in Sources */,
 				4B39B15121DD725300FF8D70 /* CloseView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

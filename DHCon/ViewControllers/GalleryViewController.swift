@@ -10,7 +10,18 @@ import UIKit
 import Photos
 import PhotosUI
 
-class GalleryViewController: UIViewController {
+class GalleryViewController: UIViewController, SelectImageCollectionViewDelegate {
+    public static func Create(initialization: ((GalleryViewController) -> Void)? = nil) -> UIViewController {
+        guard let navVC = UIStoryboard(name: "Gallery", bundle: Bundle.main).instantiateInitialViewController() as? UINavigationController else {
+            return UIViewController()
+        }
+        
+        if let galleryVC = navVC.topViewController as? GalleryViewController {
+            initialization?(galleryVC)
+        }
+        
+        return navVC
+    }
     
     
     // MARK: - IBOutlets
@@ -18,6 +29,7 @@ class GalleryViewController: UIViewController {
     @IBOutlet weak var barClose: UIBarButtonItem!
     @IBOutlet weak var cvImages: SelectImageCollectionView!
     
+    public var completionSelect: ((UIImage) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +61,7 @@ class GalleryViewController: UIViewController {
             NSAttributedString.Key.foregroundColor: #colorLiteral(red: 0.2509803922, green: 0.2509803922, blue: 0.3529411765, alpha: 1),
             NSAttributedString.Key.font: UIFont(name: "ArialRoundedMTBold", size: 32)!
         ]
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItem.Style.plain, target: self, action: nil)
         
         let closeView = CloseView()
         closeView.backgroundColor = UIColor.clear
@@ -56,6 +69,8 @@ class GalleryViewController: UIViewController {
         closeView.isUserInteractionEnabled = true
         closeView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(barCloseClick(_:))))
         self.barClose.customView = closeView
+        
+        self.cvImages.selectImageDelegate = self
     }
     
     private func setupPhotosData() {
@@ -71,8 +86,21 @@ class GalleryViewController: UIViewController {
     @objc func barCloseClick(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    
+    func selectImageCollectionView(_ collectionView: SelectImageCollectionView, didSelectImageAt image: UIImage) {
+        self.navigationController?.show(CropperViewController.Create(initialization: { (cropperVC) in
+            cropperVC.image = image
+        }), sender: nil)
+        /*self.completionSelect?(image)
+        self.dismiss(animated: true, completion: nil)*/
+    }
 }
 
+
+protocol SelectImageCollectionViewDelegate {
+    func selectImageCollectionView(_ collectionView: SelectImageCollectionView, didSelectImageAt image: UIImage)
+}
 
 class SelectImageCollectionView: UICollectionView,
         UICollectionViewDelegate, UICollectionViewDataSource,
@@ -84,6 +112,8 @@ class SelectImageCollectionView: UICollectionView,
         }
     }
     var imageManager = PHCachingImageManager()
+    
+    var selectImageDelegate: SelectImageCollectionViewDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -128,6 +158,25 @@ class SelectImageCollectionView: UICollectionView,
         }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let assets = self.allPhotos, assets.count > 0 else { return }
+        
+        let asset = assets.object(at: indexPath.item)
+        
+        let options = PHImageRequestOptions()
+        options.isNetworkAccessAllowed = true
+        options.resizeMode = .exact
+        options.deliveryMode = .highQualityFormat
+        
+        self.imageManager.requestImage(for: asset, targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight), contentMode: PHImageContentMode.aspectFill, options: options) { (image, _) in
+            guard let image = image else { return }
+            
+            DispatchQueue.main.async {
+                self.selectImageDelegate?.selectImageCollectionView(self, didSelectImageAt: image)
+            }
+        }
     }
     
     
