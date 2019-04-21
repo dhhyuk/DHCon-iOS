@@ -9,6 +9,7 @@
 import UIKit
 import Photos
 import PhotosUI
+import RSKImageCropper
 
 class GalleryViewController: UIViewController, SelectImageCollectionViewDelegate {
     public static func Create(initialization: ((GalleryViewController) -> Void)? = nil) -> UIViewController {
@@ -29,30 +30,16 @@ class GalleryViewController: UIViewController, SelectImageCollectionViewDelegate
     @IBOutlet weak var barClose: UIBarButtonItem!
     @IBOutlet weak var cvImages: SelectImageCollectionView!
     
+    
     public var completionSelect: ((UIImage) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupViews()
-        
-        let photos = PHPhotoLibrary.authorizationStatus()
-        switch photos {
-        case .authorized:
+        self.setupPhotoAuthorization { [weak self] in
+            guard let self = self else { return }
             self.setupPhotosData()
-            
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization { (status) in
-                guard status == .authorized else {
-                    return
-                }
-                DispatchQueue.main.async {
-                    self.setupPhotosData()
-                }
-            }
-            
-        default:
-            break
         }
     }
     
@@ -73,6 +60,25 @@ class GalleryViewController: UIViewController, SelectImageCollectionViewDelegate
         self.cvImages.selectImageDelegate = self
     }
     
+    private func setupPhotoAuthorization(completionAuthorized: @escaping (() -> Void) ) {
+        let photos = PHPhotoLibrary.authorizationStatus()
+        switch photos {
+        case .authorized:
+            completionAuthorized()
+            
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { (status) in
+                guard status == .authorized else {
+                    return
+                }
+                completionAuthorized()
+            }
+            
+        default:
+            break
+        }
+    }
+    
     private func setupPhotosData() {
         let allPhotosOptions = PHFetchOptions()
         allPhotosOptions.predicate = NSPredicate(format: "mediaType = %d", PHAssetMediaType.image.rawValue)
@@ -89,11 +95,28 @@ class GalleryViewController: UIViewController, SelectImageCollectionViewDelegate
     
     
     func selectImageCollectionView(_ collectionView: SelectImageCollectionView, didSelectImageAt image: UIImage) {
-        self.navigationController?.show(CropperViewController.Create(initialization: { (cropperVC) in
+        let vcImageCrop = RSKImageCropViewController(image: image, cropMode: RSKImageCropMode.square)
+        //vcImageCrop.
+        vcImageCrop.delegate = self
+        self.navigationController?.show(vcImageCrop, sender: nil)
+        /*self.navigationController?.show(CropperViewController.Create(initialization: { (cropperVC) in
             cropperVC.image = image
         }), sender: nil)
-        /*self.completionSelect?(image)
+        self.completionSelect?(image)
         self.dismiss(animated: true, completion: nil)*/
+    }
+}
+
+
+extension GalleryViewController: RSKImageCropViewControllerDelegate {
+    func imageCropViewController(_ controller: RSKImageCropViewController, didCropImage croppedImage: UIImage, usingCropRect cropRect: CGRect, rotationAngle: CGFloat) {
+        dismiss(animated: true) {
+            self.completionSelect?(croppedImage)
+        }
+    }
+    
+    func imageCropViewControllerDidCancelCrop(_ controller: RSKImageCropViewController) {
+        controller.navigationController?.popViewController(animated: true)
     }
 }
 

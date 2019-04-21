@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class ViewController: UIViewController {
 
@@ -18,16 +20,19 @@ class ViewController: UIViewController {
     @IBOutlet var constraintScrollBottomMargin: NSLayoutConstraint!
     @IBOutlet weak var viewImageCard: UIView!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var viewLabel: ConLabelView!
     @IBOutlet weak var btnSelectImage: UIButton!
     @IBOutlet weak var fieldPhrases: UITextField!
     @IBOutlet weak var btnSave: UIButton!
     
     
+    fileprivate let disposeBag = DisposeBag()
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupViews()
         self.setupNotifications()
+        self.setupRx()
     }
     
     private func setupViews() {
@@ -71,6 +76,32 @@ class ViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleKeyboardNotification), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    private func setupRx() {
+        self.btnSelectImage.rx
+            .tap
+            .subscribe(onNext: { [weak self] in
+                let vc = GalleryViewController.Create(initialization: { (galleryVC) in
+                    galleryVC.completionSelect = { image in
+                        self?.imageView.image = image
+                    }
+                })
+                self?.present(vc, animated: true, completion: nil)
+            })
+            .disposed(by: self.disposeBag)
+        
+        self.fieldPhrases.rx
+            .value
+            .filter { $0 != nil }
+            .map { $0! }
+            .subscribe(onNext: { [weak self] (phrases) in
+                self?.viewLabel.layerLabel.actions = [:]
+                CALayer.performWithoutAnimation {
+                    self?.viewLabel.layerLabel.string = phrases
+                }
+            })
+            .disposed(by: self.disposeBag)
+    }
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
@@ -86,18 +117,6 @@ class ViewController: UIViewController {
         if self.fieldPhrases.isFirstResponder {
             self.fieldPhrases.resignFirstResponder()
         }
-    }
-
-    
-    // MARK: - IBActions
-    
-    @IBAction func btnSelectImageClick(_ sender: Any) {
-        let vc = GalleryViewController.Create { (galleryVC) in
-            galleryVC.completionSelect = { image in
-                self.imageView.image = image
-            }
-        }
-        self.present(vc, animated: true, completion: nil)
     }
     
     

@@ -1,0 +1,6 @@
+framework module Pods_DHConUITests {
+  umbrella header "Pods-DHConUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

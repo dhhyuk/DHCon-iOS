@@ -1,0 +1,6 @@
+framework module Pods_DHCon {
+  umbrella header "Pods-DHCon-umbrella.h"
+
+  export *
+  module * { export * }
+}
